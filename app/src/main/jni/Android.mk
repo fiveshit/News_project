@@ -16,7 +16,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := inx_factory_ui
-LOCAL_SRC_FILES := inx_factory_ui.c
+LOCAL_MODULE    := news
+LOCAL_SRC_FILES := news.c
 
 include $(BUILD_SHARED_LIBRARY)
