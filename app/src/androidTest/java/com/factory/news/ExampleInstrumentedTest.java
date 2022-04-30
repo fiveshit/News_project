@@ -1,4 +1,4 @@
-package com.factory.inx_fac;
+package com.factory.news;
 
 import android.content.Context;
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fefefe"
-    tools:context=".MainActivity">
+    tools:context="com.factory.news.MainActivity">
 
     <ListView
         android:id="@+id/factory_ui_list"

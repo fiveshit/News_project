@@ -1,11 +1,9 @@
-package com.factory.inx_fac;
+package com.factory.news;
 
 //import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.MotionEvent;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -14,17 +12,10 @@ import java.util.Stack;
 import android.view.KeyEvent;
 import android.util.Log;
 
-import android.view.Menu;
-import android.widget.ArrayAdapter;
-
-import java.util.ArrayList;
-
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.TextView;
+
+import com.factory.news.R;
 
 
 public class MainActivity extends Activity {
