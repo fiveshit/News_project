@@ -13,10 +13,15 @@
 # limitations under the License.
 #
 LOCAL_PATH := $(call my-dir)
-
+CRYSTAX_PATH := C:/Users/d1004/AppData/Local/Android/pybridge
 include $(CLEAR_VARS)
-
-LOCAL_MODULE    := news
-LOCAL_SRC_FILES := news.cpp
-
+LOCAL_MODULE:= news
+LOCAL_SRC_FILES := news.c
+LOCAL_LDLIBS := -llog
+LOCAL_SHARED_LIBRARIES := python3.8m
 include $(BUILD_SHARED_LIBRARY)
+include $(CLEAR_VARS)
+LOCAL_MODULE    := python3.8m
+LOCAL_SRC_FILES := $(CRYSTAX_PATH)/python-for-android/build/other_builds/python3/armeabi-v7a__ndk_target_21/python3/android-build/libpython3.8m.so
+LOCAL_EXPORT_CFLAGS := -I $(CRYSTAX_PATH)/python-for-android/build/other_builds/python3/armeabi-v7a__ndk_target_21/python3/Include
+include $(PREBUILT_SHARED_LIBRARY)

@@ -5,11 +5,10 @@
 
 #include <jni.h>
 #include <stdio.h>
-
+#include <Python.h>
 extern "C"
 {
     JNIEXPORT jstring JNICALL Java_com_factory_news_JNIMethod_getFromJNI(JNIEnv *env,jobject obj){
-
         return env -> NewStringUTF("Hello i am from JNI!!");
 
     }

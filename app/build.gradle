@@ -17,7 +17,7 @@ android {
         }
         ndk {
             moduleName "news"         //生成的so名字
-            //abiFilters  "armeabi-v7a", "x86"  //輸出指定三種abi體系結構下的so庫。
+            abiFilters  "armeabi-v7a" //輸出指定三種abi體系結構下的so庫。
             stl "stlport_static"
             ldLibs "log"
         }

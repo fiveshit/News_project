@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
                 new function_interface() { public boolean function(int key_code) { return Technology_info_next(key_code); }},
 
         };
+
         // other list
         adapter = new MyAdapter(list, this);
         // item list
