@@ -15,10 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.factory.news.R;
 
 
 public class MainActivity extends Activity {
+
     public String TAG = "INX_Factory_UI";
     private ListView listView = null;
     // Item info class
@@ -43,13 +43,13 @@ public class MainActivity extends Activity {
 
     private static final int MAX_ITEM = 16;
 
-    public static Integer level_status = MAIN_INFO;;
+    public static Integer level_status = MAIN_INFO;
     function_interface[] call_function = new function_interface[MAX_ITEM];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("TAG ", "Jack");
+        Log.d("TAG ", "onCreate");
         //inx factory UI list
         factory_list();
         level.push(level_status);
@@ -62,7 +62,6 @@ public class MainActivity extends Activity {
                 new function_interface() { public boolean function(int key_code) { return Technology_info_next(key_code); }},
 
         };
-
         // other list
         adapter = new MyAdapter(list, this);
         // item list
@@ -71,14 +70,14 @@ public class MainActivity extends Activity {
         Politics_info = new Politics_list(list, this);
         Society_info = new Society_list(list, this);
         Technology_info = new Technology_list(list, this);
-        listView = (ListView) findViewById(R.id.factory_ui_list);
+        listView = findViewById(R.id.factory_ui_list);
         listView.setAdapter(adapter); //將設定好的 adapter 丟進 ListView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 // 利用索引值取得點擊的項目內容。
-                Log.d(TAG,"index :"+index);
+                Log.d(TAG,"index : "+index);
 
                 if(level_status == MAIN_INFO) {
                     call_function[index].function(index);
@@ -143,6 +142,7 @@ public class MainActivity extends Activity {
             }
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            Log.d(TAG,"press center key");
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if(level_status == MAIN_INFO)

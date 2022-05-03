@@ -17,6 +17,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := news
-LOCAL_SRC_FILES := news.c
+LOCAL_SRC_FILES := news.cpp
 
 include $(BUILD_SHARED_LIBRARY)

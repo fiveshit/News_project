@@ -4,12 +4,25 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.factory.inx_fac"
+        applicationId "com.factory.news"
         minSdkVersion 25
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild{
+            cmake{
+                cppFlags ""
+            }
+        }
+        ndk {
+            moduleName "news"         //生成的so名字
+            //abiFilters  "armeabi-v7a", "x86"  //輸出指定三種abi體系結構下的so庫。
+            stl "stlport_static"
+            ldLibs "log"
+        }
+
+
     }
     buildTypes {
         release {
@@ -17,6 +30,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild{
+        cmake{
+            path "src/main/CMakeLists.txt"
+        }
+    }
+
+    sourceSets{
+        main{
+            jni.srcDirs =[]
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+    }
+    externalNativeBuild.ndkBuild.path = 'src/main/jni/Android.mk'
+    ndkVersion '24.0.8215888'
 }
 
 dependencies {
