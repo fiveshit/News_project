@@ -28,8 +28,8 @@ public class Finance_list {
         result = new String[size];
         Finance_list = list;
         finance_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Finance_function(key_code);} },
-                new function_interface (){ public boolean function(int key_code){return Set_Finance_function(key_code);}},
+                new function_interface (){ public boolean function(int key_code){return Set_Finance_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Finance_function();}},
         };
 
     }
@@ -63,7 +63,7 @@ public class Finance_list {
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Finance_function(int key_code)
+    public boolean Set_Finance_function()
     {
         Capture_news_info task1 = new Capture_news_info();
         task1.Set_url(url);
@@ -76,7 +76,6 @@ public class Finance_list {
         }
         result = task1.getCallback();
         size = task1.getCallback_size();
-        Log.d(TAG,"key_code :" + key_code);
         return true;
     }
 }

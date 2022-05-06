@@ -25,8 +25,8 @@ public class Politics_list {
     {
         Politics_list = list;
         Politics_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Politics_function(key_code);} },
-                new function_interface (){ public boolean function(int key_code){return Set_Politics_function(key_code);}},
+                new function_interface (){ public boolean function(int key_code){return Set_Politics_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Politics_function();}},
         };
 
     }
@@ -56,7 +56,7 @@ public class Politics_list {
     /*-----------------------------------------*/
     /*---Set function in the Politics list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Politics_function(int key_code)
+    public boolean Set_Politics_function()
     {
         Capture_news_info task3 = new Capture_news_info();
         task3.Set_url(url);
@@ -69,7 +69,6 @@ public class Politics_list {
         }
         result = task3.getCallback();
         size = task3.getCallback_size();
-        Log.d(TAG,"size :" + size);
         return true;
     }
 

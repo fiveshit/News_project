@@ -25,8 +25,8 @@ public class Society_list {
     {
         Society_list = list;
         Society_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Society_function(key_code);} },
-                new function_interface (){ public boolean function(int key_code){return Set_Society_function(key_code);}},
+                new function_interface (){ public boolean function(int key_code){return Set_Society_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Society_function();}},
         };
 
     }
@@ -55,7 +55,7 @@ public class Society_list {
     /*-----------------------------------------*/
     /*---Set function in the Society list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Society_function(int key_code)
+    public boolean Set_Society_function()
     {
         Capture_news_info task4 = new Capture_news_info();
         task4.Set_url(url);
@@ -68,7 +68,6 @@ public class Society_list {
         }
         result = task4.getCallback();
         size = task4.getCallback_size();
-        Log.d(TAG,"key_code :" + key_code);
         return true;
     }
 

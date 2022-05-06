@@ -25,8 +25,8 @@ public class Technology_list {
     {
         Technology_list = list;
         Technology_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Technology_function(key_code);} },
-                new function_interface (){ public boolean function(int key_code){return Set_Technology_function(key_code);}},
+                new function_interface (){ public boolean function(int key_code){return Set_Technology_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Technology_function();}},
         };
 
     }
@@ -55,7 +55,7 @@ public class Technology_list {
     /*-----------------------------------------*/
     /*---Set function in the Technology list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Technology_function(int key_code)
+    public boolean Set_Technology_function()
     {
         Capture_news_info task5 = new Capture_news_info();
         task5.Set_url(url);
@@ -68,7 +68,6 @@ public class Technology_list {
         }
         result = task5.getCallback();
         size = task5.getCallback_size();
-        Log.d(TAG,"key_code :" + key_code);
         return true;
     }
 

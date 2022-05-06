@@ -26,8 +26,8 @@ public class Internationality_list {
     {
         Internationality_list = list;
         Internationality_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Internationality_function(key_code);} },
-                new function_interface (){ public boolean function(int key_code){return Set_Internationality_function(key_code);}},
+                new function_interface (){ public boolean function(int key_code){return Set_Internationality_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Internationality_function();}},
         };
 
     }
@@ -57,7 +57,7 @@ public class Internationality_list {
     /*-----------------------------------------*/
     /*---Set function in the internationality list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Internationality_function(int key_code)
+    public boolean Set_Internationality_function()
     {
         Capture_news_info task2 = new Capture_news_info();
         task2.Set_url(url);
@@ -70,7 +70,7 @@ public class Internationality_list {
         }
         result = task2.getCallback();
         size = task2.getCallback_size();
-        Log.d(TAG,"key_code :" + key_code);
+
         return true;
     }
 

@@ -58,11 +58,11 @@ public class MainActivity extends Activity {
         level.push(level_status);
         // function array
         call_function = new function_interface[] {
-                new function_interface() { public boolean function(int key_code) { return Finance_info_next(key_code); }},
-                new function_interface() { public boolean function(int key_code) { return Internationlity_info_next(key_code); }},
-                new function_interface() { public boolean function(int key_code) { return Politics_info_next(key_code); }},
-                new function_interface() { public boolean function(int key_code) { return Society_info_next(key_code); }},
-                new function_interface() { public boolean function(int key_code) { return Technology_info_next(key_code); }},
+                new function_interface() { public boolean function(int key_code) { return Finance_info_next(); }},
+                new function_interface() { public boolean function(int key_code) { return Internationlity_info_next(); }},
+                new function_interface() { public boolean function(int key_code) { return Politics_info_next(); }},
+                new function_interface() { public boolean function(int key_code) { return Society_info_next(); }},
+                new function_interface() { public boolean function(int key_code) { return Technology_info_next(); }},
 
         };
 
@@ -194,14 +194,19 @@ public class MainActivity extends Activity {
         if (level_status == MAIN_INFO) {
             factory_list();
         } else if (level_status == FINANCE_INFO) {
+            finance_info.Set_Finance_function();
             finance_info.finance_list();
         } else if (level_status == INTERNATION_INFO) {
+            Internationality_info.Set_Internationality_function();
             Internationality_info.internationality_list();
         } else if (level_status == POLITICAL_INFO) {
+            Politics_info.Set_Politics_function();
             Politics_info.politics_list();
         } else if (level_status == SOCIETY_INFO) {
+            Society_info.Set_Society_function();
             Society_info.society_list();
         } else if (level_status == TECH_INFO) {
+            Technology_info.Set_Technology_function();
             Technology_info.technology_list();
         }
 
@@ -220,27 +225,27 @@ public class MainActivity extends Activity {
     /*---Set function the in Main info list----*/
     /*-----------------------------------------*/
 
-    public boolean Finance_info_next(int key_code){
+    public boolean Finance_info_next(){
         push_previous_level_to_stack();
         level_status = FINANCE_INFO;
         return true;
     }
-    public boolean Internationlity_info_next(int key_code){
+    public boolean Internationlity_info_next(){
         push_previous_level_to_stack();
         level_status = INTERNATION_INFO;
         return true;
     }
-    public boolean Politics_info_next(int key_code){
+    public boolean Politics_info_next(){
         push_previous_level_to_stack();
         level_status = POLITICAL_INFO;
         return true;
     }
-    public boolean Society_info_next(int key_code){
+    public boolean Society_info_next(){
         push_previous_level_to_stack();
         level_status = SOCIETY_INFO;
         return true;
     }
-    public boolean Technology_info_next(int key_code){
+    public boolean Technology_info_next(){
         push_previous_level_to_stack();
         level_status = TECH_INFO;
         return true;
