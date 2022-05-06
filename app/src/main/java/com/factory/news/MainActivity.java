@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     private Politics_list Politics_info = null;
     private Society_list Society_info = null;
     private Technology_list Technology_info = null;
+    private Stock_list Stock_info = null;
 
     private MyAdapter adapter = null;
     List<ItemBean> list = new ArrayList<>();
@@ -41,7 +42,7 @@ public class MainActivity extends Activity {
     private static final int POLITICAL_INFO = 4;
     private static final int SOCIETY_INFO = 5;
     private static final int TECH_INFO = 6;
-    private static final int LIFE_INFO = 7;
+    private static final int STOCK_INFO = 7;
 
 
     private static final int MAX_ITEM = 16;
@@ -63,6 +64,8 @@ public class MainActivity extends Activity {
                 new function_interface() { public boolean function(int key_code) { return Politics_info_next(); }},
                 new function_interface() { public boolean function(int key_code) { return Society_info_next(); }},
                 new function_interface() { public boolean function(int key_code) { return Technology_info_next(); }},
+                new function_interface() { public boolean function(int key_code) { return Stock_info_next(); }},
+
 
         };
 
@@ -74,6 +77,7 @@ public class MainActivity extends Activity {
         Politics_info = new Politics_list(list, this);
         Society_info = new Society_list(list, this);
         Technology_info = new Technology_list(list, this);
+        Stock_info = new Stock_list(list,this);
         listView = findViewById(R.id.factory_ui_list);
         listView.setAdapter(adapter); //將設定好的 adapter 丟進 ListView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -110,11 +114,17 @@ public class MainActivity extends Activity {
                     }else {
                         Society_info.Society_function[index].function(index);
                     }
-                }else if(level_status == TECH_INFO){
-                    if(index >= 2) {
-                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
-                    }else {
+                }else if(level_status == TECH_INFO) {
+                    if (index >= 2) {
+                        Toast.makeText(MainActivity.this, "Not Support !!!!", Toast.LENGTH_LONG).show();
+                    } else {
                         Technology_info.Technology_function[index].function(index);
+                    }
+                }else if(level_status == STOCK_INFO){
+                    if (index >= 2) {
+                        Toast.makeText(MainActivity.this, "Not Support !!!!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Stock_info.stock_function[index].function(index);
                     }
                 }
                 dataChanged(level_status);
@@ -137,6 +147,7 @@ public class MainActivity extends Activity {
         list.add(new ItemBean("政治"));
         list.add(new ItemBean( "社會"));
         list.add(new ItemBean("科技"));
+        list.add(new ItemBean("股市"));
     }
     // push_previous_level_to_stack
     static void push_previous_level_to_stack() {
@@ -208,6 +219,9 @@ public class MainActivity extends Activity {
         } else if (level_status == TECH_INFO) {
             Technology_info.Set_Technology_function();
             Technology_info.technology_list();
+        } else if (level_status == STOCK_INFO) {
+            Stock_info.Set_Stock_function();
+            Stock_info.stock_list();
         }
 
 
@@ -249,6 +263,12 @@ public class MainActivity extends Activity {
         push_previous_level_to_stack();
         level_status = TECH_INFO;
         return true;
+    }
+    public boolean Stock_info_next(){
+        push_previous_level_to_stack();
+        level_status = STOCK_INFO;
+        return true;
+
     }
 
 
