@@ -9,7 +9,7 @@
         android:layout_height="60dp"
         android:gravity="center"
         android:textColor="#000000"
-        android:textSize="30sp"
+        android:textSize="15sp"
         />
 
 

@@ -15,10 +15,12 @@ import java.util.List;
 // ---------------------------------------//
 public class Society_list {
     public String TAG = "Society_UI";
+    private final String url = "https://udn.com/news/breaknews/1/2#breaknews";
     private final int MAX_AQ_LIST = 2;
     List<ItemBean> Society_list = new ArrayList<>();
     function_interface[] Society_function = new function_interface[MAX_AQ_LIST];
-
+    private static String[] result;
+    public int size = 0;
     public Society_list(List<ItemBean> list, Context context)
     {
         Society_list = list;
@@ -35,13 +37,19 @@ public class Society_list {
     {
         Society_list.add(new ItemBean(Get_Society_Ver()));
         Society_list.add(new ItemBean(Get_Society_Test()));
+        /*---------------------------*/
+        /*------dynamic update ------*/
+        /*---------------------------*/
+        for(int i =0;i<size;i++) {
+            Society_list.add(new ItemBean(result[i]));
+        }
     }
     public String Get_Society_Ver(){
         String Society_Ver = "0.0.1";
         return Society_Ver;
     }
     public String Get_Society_Test(){
-        String Society_Ver_Test = "Society";
+        String Society_Ver_Test = "Refresh";
         return Society_Ver_Test;
     }
     /*-----------------------------------------*/
@@ -49,6 +57,17 @@ public class Society_list {
     /*-----------------------------------------*/
     public boolean Set_Society_function(int key_code)
     {
+        Capture_news_info task4 = new Capture_news_info();
+        task4.Set_url(url);
+        Thread t4 = new Thread(task4);//.start()
+        try {
+            t4.start();
+            t4.join();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        result = task4.getCallback();
+        size = task4.getCallback_size();
         Log.d(TAG,"key_code :" + key_code);
         return true;
     }

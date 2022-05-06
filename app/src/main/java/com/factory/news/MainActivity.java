@@ -14,6 +14,9 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
+
+import org.jsoup.Jsoup;
 
 
 
@@ -78,20 +81,41 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 // 利用索引值取得點擊的項目內容。
-                Log.d(TAG,"index : "+index);
+                Log.d(TAG,"index : "+index+"view :"+view.getId());
 
                 if(level_status == MAIN_INFO) {
                     call_function[index].function(index);
                 }else if(level_status == FINANCE_INFO){
-                    finance_info.finance_function[index].function(index);
+                    if(index >= 2) {
+                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        finance_info.finance_function[index].function(index);
+                    }
                 }else if(level_status == INTERNATION_INFO){
-                    Internationality_info.Internationality_function[index].function(index);
+                    if(index >= 2) {
+                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
+                    }else {
+                        Internationality_info.Internationality_function[index].function(index);
+                    }
                 }else if(level_status == POLITICAL_INFO){
-                    Politics_info.Politics_function[index].function(index);
+                    if(index >= 2) {
+                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
+                    }else {
+                        Politics_info.Politics_function[index].function(index);
+                    }
                 }else if(level_status == SOCIETY_INFO){
-                    Society_info.Society_function[index].function(index);
+                    if(index >= 2) {
+                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
+                    }else {
+                        Society_info.Society_function[index].function(index);
+                    }
                 }else if(level_status == TECH_INFO){
-                    Technology_info.Technology_function[index].function(index);
+                    if(index >= 2) {
+                        Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
+                    }else {
+                        Technology_info.Technology_function[index].function(index);
+                    }
                 }
                 dataChanged(level_status);
 
