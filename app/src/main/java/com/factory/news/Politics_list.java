@@ -20,7 +20,8 @@ public class Politics_list {
     List<ItemBean> Politics_list = new ArrayList<>();
     function_interface[] Politics_function = new function_interface[MAX];
     private static String[] result;
-    public int size = 0;
+    private static String[] link;
+    private int size = 0;
     public Politics_list(List<ItemBean> list, Context context)
     {
         Politics_list = list;
@@ -53,13 +54,19 @@ public class Politics_list {
         String Politics_Ver_Test = "Refresh";
         return Politics_Ver_Test;
     }
+    /*----------------------------------------------*/
+    /*-------get function in the Politics list -----*/
+    /*----------------------------------------------*/
+    public String[] Get_Politics_link_info()
+    {
+        return link;
+    }
     /*-----------------------------------------*/
     /*---Set function in the Politics list -----*/
     /*-----------------------------------------*/
     public boolean Set_Politics_function()
     {
-        Capture_news_info task3 = new Capture_news_info();
-        task3.Set_url(url);
+        Capture_news_info task3 = new Capture_news_info(url);
         Thread t3 = new Thread(task3);//.start()
         try {
             t3.start();
@@ -69,6 +76,7 @@ public class Politics_list {
         }
         result = task3.getCallback();
         size = task3.getCallback_size();
+        link = task3.getCallback_link();
         return true;
     }
 

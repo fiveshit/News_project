@@ -20,7 +20,8 @@ public class Technology_list {
     List<ItemBean> Technology_list = new ArrayList<>();
     function_interface[] Technology_function = new function_interface[MAX];
     private static String[] result;
-    public int size = 0;
+    private static String[] link;
+    private int size = 0;
     public Technology_list(List<ItemBean> list, Context context)
     {
         Technology_list = list;
@@ -52,13 +53,19 @@ public class Technology_list {
         String Technology_Ver_Test = "Refresh";
         return Technology_Ver_Test;
     }
+    /*-------------------------------------------------*/
+    /*-------get function in the Technology list ------*/
+    /*-------------------------------------------------*/
+    public String[] Get_Technology_link_info()
+    {
+        return link;
+    }
     /*-----------------------------------------*/
     /*---Set function in the Technology list -----*/
     /*-----------------------------------------*/
     public boolean Set_Technology_function()
     {
-        Capture_news_info task5 = new Capture_news_info();
-        task5.Set_url(url);
+        Capture_news_info task5 = new Capture_news_info(url);
         Thread t5 = new Thread(task5);//.start()
         try {
             t5.start();
@@ -68,6 +75,7 @@ public class Technology_list {
         }
         result = task5.getCallback();
         size = task5.getCallback_size();
+        link = task5.getCallback_link();
         return true;
     }
 

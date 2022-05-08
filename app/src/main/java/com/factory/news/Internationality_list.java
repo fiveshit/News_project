@@ -18,6 +18,7 @@ public class Internationality_list {
     private final String url = "https://udn.com/news/breaknews/1/5#breaknews";
     private final int MAX_AQ_LIST = 2;
     private static String[] result;
+    private static String[] link;
     private int size = 0;
     List<ItemBean> Internationality_list = new ArrayList<>();
     function_interface[] Internationality_function = new function_interface[MAX_AQ_LIST];
@@ -31,9 +32,9 @@ public class Internationality_list {
         };
 
     }
-    /*-----------------------------------------*/
+    /*--------------------------------------------------*/
     /*------function in the internationality list ------*/
-    /*-----------------------------------------*/
+    /*--------------------------------------------------*/
     public void internationality_list()
     {
         Internationality_list.add(new ItemBean(Get_Internationality_Ver()));
@@ -54,13 +55,19 @@ public class Internationality_list {
         String Internationality_Ver_Test = "Refresh";
         return Internationality_Ver_Test;
     }
+    /*------------------------------------------------------*/
+    /*-------get function in the internationality list -----*/
+    /*------------------------------------------------------*/
+    public String[] Get_internationality_link_info()
+    {
+        return link;
+    }
     /*-----------------------------------------*/
     /*---Set function in the internationality list -----*/
     /*-----------------------------------------*/
     public boolean Set_Internationality_function()
     {
-        Capture_news_info task2 = new Capture_news_info();
-        task2.Set_url(url);
+        Capture_news_info task2 = new Capture_news_info(url);
         Thread t2 = new Thread(task2);//.start()
         try {
             t2.start();
@@ -70,7 +77,7 @@ public class Internationality_list {
         }
         result = task2.getCallback();
         size = task2.getCallback_size();
-
+        link = task2.getCallback_link();
         return true;
     }
 

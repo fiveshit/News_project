@@ -21,9 +21,14 @@ import java.util.List;
 
 
 public class Capture_news_info extends Thread{
-    public String url;
-    public String[] result;
-    public int news_size;
+    private String url;
+    private String[] result;
+    private String[] link;
+    private int news_size;
+    public Capture_news_info(String url)
+    {
+        this.url = url;
+    }
     /**
      *
      * function getCallback_size
@@ -37,6 +42,17 @@ public class Capture_news_info extends Thread{
     }
     /**
      *
+     * function getCallback web link
+     * describe get value
+     * create: Joe
+     * return: java.lang.String[]
+     **/
+    public String[] getCallback_link()
+    {
+        return link;
+    }
+    /**
+     *
      * function getCallback
      * describe get value
      * create: Joe
@@ -45,17 +61,6 @@ public class Capture_news_info extends Thread{
     public String[] getCallback()
     {
         return result;
-    }
-    /**
-     *
-     * function Set_url
-     * describe set url
-     * create: Joe
-     * return: void
-     **/
-    public void Set_url(String url_data)
-    {
-        url = url_data;
     }
     /**
      *
@@ -72,14 +77,24 @@ public class Capture_news_info extends Thread{
             Document doc =  Jsoup.parse(news_url, 3000);
             Elements title = doc.select("div.story-list__text");
             result = new String[title.size()];
+            link = new String[title.size()];
             news_size = title.size();
             for(int i=0;i<news_size;i++) {            //用FOR個別抓取選定的Tag內容
                 Elements title_select = title.get(i).select("a");//.attr("title");//選擇第i個後選取所有為td的Tag
                 // title_select.get(0).text();        //只抓取第 0 Tag的文字
                 if (title_select.attr("title") != null) {
-                    result[i] = (title_select.attr("title")+"\n");
+                    this.result[i] = (title_select.attr("title")+"\n");
                     Thread.sleep(10);    //避免執行緒跑太快而UI執行續顯示太慢,覆蓋掉te01~03內容所以設個延遲,也可以使用AsyncTask-異步任務
                 }
+            }
+            for(int j=0;j<news_size;j++) {            //用FOR個別抓取選定的Tag內容
+                Elements title_select = title.get(j).select("a");//.attr("title");//選擇第i個後選取所有為td的Tag
+                // title_select.get(0).text();        //只抓取第 0 Tag的文字
+                if (title_select.attr("href") != null) {
+                    link[j] = ("https://udn.com"+title_select.attr("href")+"\n");
+                    Thread.sleep(10);    //避免執行緒跑太快而UI執行續顯示太慢,覆蓋掉te01~03內容所以設個延遲,也可以使用AsyncTask-異步任務
+                }
+                //System.out.println(link[j]);
             }
             /*
             connection = (HttpURLConnection)news_url.openConnection();

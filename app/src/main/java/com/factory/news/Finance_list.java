@@ -1,6 +1,8 @@
 package com.factory.news;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -20,17 +22,26 @@ public class Finance_list {
     private final String url = "https://udn.com/news/breaknews/1/6#breaknews";
     private final int MAX_FINANCE_LIST = 2;
     List<ItemBean> Finance_list = new ArrayList<>();
+    MainActivity mainActivity = new MainActivity();
     private static String[] result;
-    public int size = 0;
-    function_interface[] finance_function = new function_interface[MAX_FINANCE_LIST];
-    public Finance_list(List<ItemBean> list, Context context)
+    private static String[] link;
+    private int size = 0;
+    function_interface[] finance_function;// = new function_interface[MAX_FINANCE_LIST];
+    public Finance_list(List<ItemBean> list ,Context context)
     {
         result = new String[size];
         Finance_list = list;
         finance_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Finance_function();} },
-                new function_interface (){ public boolean function(int key_code){return Set_Finance_function();}},
+            new function_interface (){ public boolean function(int key_code){return Set_Finance_function();} },
+            new function_interface (){ public boolean function(int key_code){return Set_Finance_function();}},
         };
+
+
+        //for(int i = 2;i < size;i++)
+        //{
+        //    Log.d(TAG,"AAAAAAA:"+i);
+        //    finance_function[i] = new function_interface(){public  boolean function(int key_code){return Set_Link_function(key_code);}};
+        //}
 
     }
     /*-----------------------------------------*/
@@ -57,16 +68,18 @@ public class Finance_list {
         return Finance_Test;
     }
     /*---------------------------------------------*/
-    /*---execute function in the Finance list -----*/
+    /*-------get function in the Finance list -----*/
     /*---------------------------------------------*/
-
+    public String[] Get_Finance_link_info()
+    {
+        return link;
+    }
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
     public boolean Set_Finance_function()
     {
-        Capture_news_info task1 = new Capture_news_info();
-        task1.Set_url(url);
+        Capture_news_info task1 = new Capture_news_info(url);
         Thread t1 = new Thread(task1);//.start()
         try {
             t1.start();
@@ -75,7 +88,15 @@ public class Finance_list {
             System.out.println(e);
         }
         result = task1.getCallback();
+        link = task1.getCallback_link();
         size = task1.getCallback_size();
+        return true;
+    }
+    public boolean Set_Link_function(int index)
+    {
+        Uri uri = Uri.parse(link[index]);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        mainActivity.startActivity(intent);
         return true;
     }
 }

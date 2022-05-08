@@ -20,7 +20,8 @@ public class Society_list {
     List<ItemBean> Society_list = new ArrayList<>();
     function_interface[] Society_function = new function_interface[MAX_AQ_LIST];
     private static String[] result;
-    public int size = 0;
+    private static String[] link;
+    private int size = 0;
     public Society_list(List<ItemBean> list, Context context)
     {
         Society_list = list;
@@ -52,13 +53,19 @@ public class Society_list {
         String Society_Ver_Test = "Refresh";
         return Society_Ver_Test;
     }
+    /*----------------------------------------------*/
+    /*-------get function in the Society list ------*/
+    /*----------------------------------------------*/
+    public String[] Get_Society_link_info()
+    {
+        return link;
+    }
     /*-----------------------------------------*/
     /*---Set function in the Society list -----*/
     /*-----------------------------------------*/
     public boolean Set_Society_function()
     {
-        Capture_news_info task4 = new Capture_news_info();
-        task4.Set_url(url);
+        Capture_news_info task4 = new Capture_news_info(url);
         Thread t4 = new Thread(task4);//.start()
         try {
             t4.start();
@@ -68,6 +75,7 @@ public class Society_list {
         }
         result = task4.getCallback();
         size = task4.getCallback_size();
+        link = task4.getCallback_link();
         return true;
     }
 

@@ -11,7 +11,8 @@ public class Stock_list {
     private final int MAX_STOCK_LIST = 2;
     List<ItemBean> Stock_list = new ArrayList<>();
     private static String[] result;
-    public int size = 0;
+    private static String[] link;
+    private int size = 0;
     function_interface[] stock_function = new function_interface[MAX_STOCK_LIST];
     public Stock_list(List<ItemBean> list, Context context)
     {
@@ -46,17 +47,21 @@ public class Stock_list {
         String Stock_Test = "Refresh";
         return Stock_Test;
     }
-    /*---------------------------------------------*/
-    /*---execute function in the Finance list -----*/
-    /*---------------------------------------------*/
+    /*--------------------------------------------*/
+    /*-------get function in the Stock list ------*/
+    /*--------------------------------------------*/
+    public String[] Get_Stock_link_info()
+    {
+        return link;
+    }
 
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
     public boolean Set_Stock_function()
     {
-        Capture_news_info task6 = new Capture_news_info();
-        task6.Set_url(url);
+        Capture_news_info task6 = new Capture_news_info(url);
+        //task6.Set_url(url);
         Thread t6 = new Thread(task6);//.start()
         try {
             t6.start();
@@ -66,6 +71,7 @@ public class Stock_list {
         }
         result = task6.getCallback();
         size = task6.getCallback_size();
+        link = task6.getCallback_link();
         return true;
     }
 }
