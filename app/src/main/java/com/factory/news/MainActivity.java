@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -26,6 +29,7 @@ public class MainActivity extends Activity {
 
     public String TAG = "INX_Factory_UI";
     private ListView listView = null;
+    private TextView header = null;
     // Item info class
     private Finance_list finance_info = null;
     private Internationality_list Internationality_info = null;
@@ -101,7 +105,6 @@ public class MainActivity extends Activity {
 
 
         };
-
         // other list
         adapter = new MyAdapter(list, this);
         // item list
@@ -111,8 +114,28 @@ public class MainActivity extends Activity {
         Society_info = new Society_list(list, this);
         Technology_info = new Technology_list(list, this);
         Stock_info = new Stock_list(list, this);
-        listView = findViewById(R.id.factory_ui_list);
+        header = (TextView)findViewById(R.id.id_tvTitle);
+        header.setText("主頁");
+        listView = (ListView)findViewById(R.id.factory_ui_list);
         listView.setAdapter(adapter); //將設定好的 adapter 丟進 ListView
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.d(TAG, "firstVisibleItem : " + firstVisibleItem + " visibleItemCount :" + visibleItemCount);
+                //if(firstVisibleItem > 0){
+                //    view.setVisibility(view.VISIBLE);
+                //}else {
+                //   view.setVisibility(View.GONE);
+                //}
+            }
+        });
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
@@ -177,9 +200,25 @@ public class MainActivity extends Activity {
         });
 
 
+
+
     }
 
+    private AbsListView.OnScrollListener onScrollChangeListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if(firstVisibleItem > 0){
+                listView.setVisibility(View.VISIBLE);
+            }else{
+                listView.setVisibility(View.GONE);
+            }
+        }
+    };
     @Override
     public void onBackPressed() {
 
@@ -247,23 +286,30 @@ public class MainActivity extends Activity {
 
         list.clear();
         if (level_status == MAIN_INFO) {
+            header.setText("主頁");
             factory_list();
         } else if (level_status == FINANCE_INFO) {
+            header.setText("財經");
             finance_info.Set_Finance_function();
             finance_info.finance_list();
         } else if (level_status == INTERNATION_INFO) {
+            header.setText("國際");
             Internationality_info.Set_Internationality_function();
             Internationality_info.internationality_list();
         } else if (level_status == POLITICAL_INFO) {
+            header.setText("政治");
             Politics_info.Set_Politics_function();
             Politics_info.politics_list();
         } else if (level_status == SOCIETY_INFO) {
+            header.setText("社會");
             Society_info.Set_Society_function();
             Society_info.society_list();
         } else if (level_status == TECH_INFO) {
+            header.setText("科技");
             Technology_info.Set_Technology_function();
             Technology_info.technology_list();
         } else if (level_status == STOCK_INFO) {
+            header.setText("股市");
             Stock_info.Set_Stock_function();
             Stock_info.stock_list();
         }
