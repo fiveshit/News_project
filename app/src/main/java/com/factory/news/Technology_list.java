@@ -2,6 +2,7 @@ package com.factory.news;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Technology_list {
     private final String url = "https://udn.com/news/breaknews/1/13#breaknews";
     private final int MAX = 2;
     List<ItemBean> Technology_list = new ArrayList<>();
+    Context context;
     function_interface[] Technology_function = new function_interface[MAX];
     private static String[] result;
     private static String[] link;
@@ -25,8 +27,9 @@ public class Technology_list {
     public Technology_list(List<ItemBean> list, Context context)
     {
         Technology_list = list;
+        this.context = context;
         Technology_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Technology_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Technology_search_function();} },
                 new function_interface (){ public boolean function(int key_code){return Set_Technology_function();}},
         };
 
@@ -46,7 +49,7 @@ public class Technology_list {
         }
     }
     public String Get_Technology_Ver(){
-        String Technology_Ver = "0.0.1";
+        String Technology_Ver = "Search";
         return Technology_Ver;
     }
     public String Get_Technology_Test(){
@@ -63,6 +66,11 @@ public class Technology_list {
     /*-----------------------------------------*/
     /*---Set function in the Technology list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Technology_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Technology_function()
     {
         Capture_news_info task5 = new Capture_news_info(url);

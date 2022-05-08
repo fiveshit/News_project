@@ -2,6 +2,7 @@ package com.factory.news;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,15 @@ public class Internationality_list {
     private static String[] link;
     private int size = 0;
     List<ItemBean> Internationality_list = new ArrayList<>();
+    Context context;
     function_interface[] Internationality_function = new function_interface[MAX_AQ_LIST];
 
     public Internationality_list(List<ItemBean> list, Context context)
     {
         Internationality_list = list;
+        this.context = context;
         Internationality_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Internationality_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Internationality_search_function();} },
                 new function_interface (){ public boolean function(int key_code){return Set_Internationality_function();}},
         };
 
@@ -48,7 +51,7 @@ public class Internationality_list {
 
     }
     public String Get_Internationality_Ver(){
-        String Internationality_Ver = "0.0.1";
+        String Internationality_Ver = "Search";
         return Internationality_Ver;
     }
     public String Get_Internationality_Test(){
@@ -65,6 +68,11 @@ public class Internationality_list {
     /*-----------------------------------------*/
     /*---Set function in the internationality list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Internationality_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Internationality_function()
     {
         Capture_news_info task2 = new Capture_news_info(url);

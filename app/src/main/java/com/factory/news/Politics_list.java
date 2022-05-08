@@ -2,6 +2,7 @@ package com.factory.news;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Politics_list {
     private final String url = "https://udn.com/news/breaknews/1/1#breaknews";
     private final int MAX = 2;
     List<ItemBean> Politics_list = new ArrayList<>();
+    Context context;
     function_interface[] Politics_function = new function_interface[MAX];
     private static String[] result;
     private static String[] link;
@@ -25,8 +27,9 @@ public class Politics_list {
     public Politics_list(List<ItemBean> list, Context context)
     {
         Politics_list = list;
+        this.context = context;
         Politics_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Politics_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Politics_search_function();} },
                 new function_interface (){ public boolean function(int key_code){return Set_Politics_function();}},
         };
 
@@ -47,7 +50,7 @@ public class Politics_list {
         }
     }
     public String Get_Politics_Ver(){
-        String Politics_Ver = "0.0.1";
+        String Politics_Ver = "Search";
         return Politics_Ver;
     }
     public String Get_Politics_Test(){
@@ -64,6 +67,11 @@ public class Politics_list {
     /*-----------------------------------------*/
     /*---Set function in the Politics list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Politics_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Politics_function()
     {
         Capture_news_info task3 = new Capture_news_info(url);

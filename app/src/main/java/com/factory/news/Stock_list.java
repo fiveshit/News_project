@@ -1,6 +1,7 @@
 package com.factory.news;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class Stock_list {
     private final String url = "https://udn.com/news/breaknews/1/11#breaknews";
     private final int MAX_STOCK_LIST = 2;
     List<ItemBean> Stock_list = new ArrayList<>();
+    Context context;
     private static String[] result;
     private static String[] link;
     private int size = 0;
@@ -18,8 +20,9 @@ public class Stock_list {
     {
         result = new String[size];
         Stock_list = list;
+        this.context = context;
         stock_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Stock_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Stock_search_function();} },
                 new function_interface (){ public boolean function(int key_code){return Set_Stock_function();}},
         };
 
@@ -40,7 +43,7 @@ public class Stock_list {
 
     }
     public String Get_Stock_Ver(){
-        String Stock_Ver = "0.0.1";
+        String Stock_Ver = "Search";
         return Stock_Ver;
     }
     public String Get_Stock_Test(){
@@ -58,6 +61,11 @@ public class Stock_list {
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Stock_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Stock_function()
     {
         Capture_news_info task6 = new Capture_news_info(url);

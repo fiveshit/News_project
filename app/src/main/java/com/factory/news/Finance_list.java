@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Finance_list {
     private final String url = "https://udn.com/news/breaknews/1/6#breaknews";
     private final int MAX_FINANCE_LIST = 2;
     List<ItemBean> Finance_list = new ArrayList<>();
+    Context context;
     MainActivity mainActivity = new MainActivity();
     private static String[] result;
     private static String[] link;
@@ -29,19 +31,12 @@ public class Finance_list {
     function_interface[] finance_function;// = new function_interface[MAX_FINANCE_LIST];
     public Finance_list(List<ItemBean> list ,Context context)
     {
-        result = new String[size];
         Finance_list = list;
+        this.context = context;
         finance_function = new function_interface []{
-            new function_interface (){ public boolean function(int key_code){return Set_Finance_function();} },
+            new function_interface (){ public boolean function(int key_code){return Set_Finance_search_function();} },
             new function_interface (){ public boolean function(int key_code){return Set_Finance_function();}},
         };
-
-
-        //for(int i = 2;i < size;i++)
-        //{
-        //    Log.d(TAG,"AAAAAAA:"+i);
-        //    finance_function[i] = new function_interface(){public  boolean function(int key_code){return Set_Link_function(key_code);}};
-        //}
 
     }
     /*-----------------------------------------*/
@@ -60,7 +55,7 @@ public class Finance_list {
 
     }
     public String Get_Finance_Ver(){
-        String Finance_Ver = "0.0.1";
+        String Finance_Ver = "Search";
         return Finance_Ver;
     }
     public String Get_Finance_Test(){
@@ -77,6 +72,11 @@ public class Finance_list {
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Finance_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Finance_function()
     {
         Capture_news_info task1 = new Capture_news_info(url);

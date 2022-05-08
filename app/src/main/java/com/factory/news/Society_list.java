@@ -2,6 +2,7 @@ package com.factory.news;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Society_list {
     private final String url = "https://udn.com/news/breaknews/1/2#breaknews";
     private final int MAX_AQ_LIST = 2;
     List<ItemBean> Society_list = new ArrayList<>();
+    Context context;
     function_interface[] Society_function = new function_interface[MAX_AQ_LIST];
     private static String[] result;
     private static String[] link;
@@ -25,8 +27,9 @@ public class Society_list {
     public Society_list(List<ItemBean> list, Context context)
     {
         Society_list = list;
+        this.context = context;
         Society_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Society_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Society_search_function();} },
                 new function_interface (){ public boolean function(int key_code){return Set_Society_function();}},
         };
 
@@ -46,7 +49,7 @@ public class Society_list {
         }
     }
     public String Get_Society_Ver(){
-        String Society_Ver = "0.0.1";
+        String Society_Ver = "Search";
         return Society_Ver;
     }
     public String Get_Society_Test(){
@@ -63,6 +66,11 @@ public class Society_list {
     /*-----------------------------------------*/
     /*---Set function in the Society list -----*/
     /*-----------------------------------------*/
+    public boolean Set_Society_search_function()
+    {
+        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        return true;
+    }
     public boolean Set_Society_function()
     {
         Capture_news_info task4 = new Capture_news_info(url);
