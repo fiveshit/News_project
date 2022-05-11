@@ -7,9 +7,18 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import com.chaquo.python.Kwarg;
+import com.chaquo.python.PyException;
+import com.chaquo.python.PyObject;
+import com.chaquo.python.android.AndroidPlatform;
+import com.chaquo.python.Python;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 //---------------------------------------//
 // Name : Finance class
@@ -19,6 +28,7 @@ import java.util.List;
 // Return : -
 // ---------------------------------------//
 public class Finance_list {
+
     public String TAG = "Finance_UI";
     private final String url = "https://udn.com/news/breaknews/1/6#breaknews";
     private final int MAX_FINANCE_LIST = 2;
@@ -39,6 +49,7 @@ public class Finance_list {
         };
 
     }
+
     /*-----------------------------------------*/
     /*------function in the Finance list ------*/
     /*-----------------------------------------*/
@@ -74,8 +85,20 @@ public class Finance_list {
     /*-----------------------------------------*/
     public boolean Set_Finance_search_function()
     {
-        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+
+        initPython();
+        Python py = Python.getInstance();
+        PyObject obj1 = py.getModule("news_capture").callAttr("test");//new Kwarg("wav_path", path),new Kwarg("pic_path", pic_path)
+        Integer result = obj1.toJava(Integer.class);//.toJava(Integer.class);
+        Log.d(TAG,"res :" + result);
+        //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+
         return true;
+    }
+    void initPython() {
+        if (!Python.isStarted()) {
+            Python.start(new AndroidPlatform(this.context));
+        }
     }
     public boolean Set_Finance_function()
     {

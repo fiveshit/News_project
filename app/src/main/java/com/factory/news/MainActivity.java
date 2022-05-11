@@ -21,7 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
+
 import org.jsoup.Jsoup;
+import com.chaquo.python.Kwarg;
+import com.chaquo.python.PyObject;
+import com.chaquo.python.android.AndroidPlatform;
+import com.chaquo.python.Python;
 
 
 
@@ -70,6 +77,7 @@ public class MainActivity extends Activity {
         //  inx factory UI list
         factory_list();
         level.push(level_status);
+
         // function array
         call_function = new function_interface[]{
                 new function_interface() {
@@ -327,6 +335,7 @@ public class MainActivity extends Activity {
     public void open_url_web(String link)
     {
         Uri uri = Uri.parse(link);
+        Log.d(TAG,"path : " + uri.getPort());
         Intent intent = new Intent(Intent.ACTION_VIEW,uri);
         startActivity(intent);
     }

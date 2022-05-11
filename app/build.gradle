@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+//python
+apply plugin: 'com.chaquo.python'
 //apply plugin: 'com.android.library'
 android {
     compileSdkVersion 29
@@ -6,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.factory.news"
         minSdkVersion 25
-        targetSdkVersion 28
+        targetSdk 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -17,9 +19,23 @@ android {
         }
         ndk {
             moduleName "news"         //生成的so名字
-            abiFilters  "armeabi-v7a" //輸出指定三種abi體系結構下的so庫。
+            abiFilters  "armeabi-v7a"//輸出指定三種abi體系結構下的so庫。
             stl "stlport_static"
             ldLibs "log"
+        }
+        python{
+            buildPython "C:\\Users\\d1004\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
+            pip{
+                install "opencv-python"
+                install "numpy"
+                install "wave"
+                install "scipy"
+                install "matplotlib"
+                install "selenium"
+                install "twstock"
+                install "lxml"
+            }
+
         }
 
 
@@ -51,6 +67,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation files('libs\\jsoup-1.14.3.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-api-4.1.4.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-chrome-driver-4.1.4.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-chromium-driver-4.1.4.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-remote-driver-4.1.4.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-http-4.1.4.jar')
+    implementation files('libs\\selenium-java-4.1.4\\selenium-java-4.1.4.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
