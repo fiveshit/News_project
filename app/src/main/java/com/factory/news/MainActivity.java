@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,26 +21,17 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.chaquo.python.Python;
-import com.chaquo.python.android.AndroidPlatform;
-
-import org.jsoup.Jsoup;
-import com.chaquo.python.Kwarg;
 import com.chaquo.python.PyObject;
-import com.chaquo.python.android.AndroidPlatform;
-import com.chaquo.python.Python;
-
 
 
 public class MainActivity extends Activity {
 
-    public String TAG = "INX_Factory_UI";
+    private String TAG = "INX_Factory_UI";
     private ListView listView = null;
     private TextView header = null;
+    private EditText search_text = null;
     // Item info class
     private Finance_list finance_info = null;
     private Internationality_list Internationality_info = null;
@@ -44,13 +39,16 @@ public class MainActivity extends Activity {
     private Society_list Society_info = null;
     private Technology_list Technology_info = null;
     private Stock_list Stock_info = null;
+    private Search_news_info search_proc = null;
+
 
     private MyAdapter adapter = null;
     List<ItemBean> list = new ArrayList<>();
     static Stack<Integer> level = new Stack<>();
+    // search result
+    List<PyObject> search_result = new ArrayList<PyObject>();
     // web link
     private static String[] link;
-
     // level status
     private static final int MAIN_INFO = 1;
     private static final int FINANCE_INFO = 2;
@@ -64,7 +62,7 @@ public class MainActivity extends Activity {
     private static final int MAX_ITEM = 8;
 
     // usb Page First item
-    private static final int FIRST_ITEM = 2;
+    private static final int FIRST_ITEM = 1;
 
     public static Integer level_status = MAIN_INFO;
     function_interface[] call_function = new function_interface[MAX_ITEM];
@@ -113,18 +111,61 @@ public class MainActivity extends Activity {
 
 
         };
+        // find View id
+        search_text = (EditText)findViewById(R.id.search);
+        listView = (ListView)findViewById(R.id.factory_ui_list);
+        header = (TextView)findViewById(R.id.id_tvTitle);
         // other list
         adapter = new MyAdapter(list, this);
         // item list
-        finance_info = new Finance_list(list, this);
+        finance_info = new Finance_list(list, search_text,this);
         Internationality_info = new Internationality_list(list, this);
         Politics_info = new Politics_list(list, this);
         Society_info = new Society_list(list, this);
         Technology_info = new Technology_list(list, this);
         Stock_info = new Stock_list(list, this);
-        header = (TextView)findViewById(R.id.id_tvTitle);
+
+
         header.setText("主頁");
-        listView = (ListView)findViewById(R.id.factory_ui_list);
+        search_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                header.setText("搜尋中");
+            }
+        });
+        search_text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    Log.d(TAG,"key enter");
+                    link = getLink();
+                    search_proc = new Search_news_info(link,search_text,MainActivity.this);
+                    search_proc.run();
+                    search_result = search_proc.getSearch_result();
+                    set_search_info(search_result);
+                    dataChanged(level_status);
+                    if(search_result.size() == 0) {
+                        header.setText("搜尋不到");
+                    } else {
+                        header.setText("搜尋 :" + search_text.getText());
+                    }
+
+                }
+                return false;
+            }
+        });
+
         listView.setAdapter(adapter); //將設定好的 adapter 丟進 ListView
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -148,13 +189,12 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 // 利用索引值取得點擊的項目內容。
-                Log.d(TAG, "index : " + index + "view :" + view.getId());
-
+                //Log.d(TAG, "index : " + index + "view :" + view.getId());
+                link = getLink();
                 if (level_status == MAIN_INFO) {
                     call_function[index].function(index);
                 } else if (level_status == FINANCE_INFO) {
                     if (index >= FIRST_ITEM) {
-                        link = finance_info.Get_Finance_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
                     } else {
@@ -162,7 +202,6 @@ public class MainActivity extends Activity {
                     }
                 } else if (level_status == INTERNATION_INFO) {
                     if (index >= FIRST_ITEM) {
-                        link = Internationality_info.Get_internationality_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
                     } else {
@@ -170,7 +209,6 @@ public class MainActivity extends Activity {
                     }
                 } else if (level_status == POLITICAL_INFO) {
                     if (index >= FIRST_ITEM) {
-                        link = Politics_info.Get_Politics_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
                     } else {
@@ -178,7 +216,6 @@ public class MainActivity extends Activity {
                     }
                 } else if (level_status == SOCIETY_INFO) {
                     if (index >= FIRST_ITEM) {
-                        link = Society_info.Get_Society_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this,"Not Support !!!!",Toast.LENGTH_LONG).show();
                     } else {
@@ -186,8 +223,6 @@ public class MainActivity extends Activity {
                     }
                 } else if (level_status == TECH_INFO) {
                     if (index >= FIRST_ITEM) {
-                        Log.d(TAG, "TECH_INFO index :" + index);
-                        link = Technology_info.Get_Technology_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this, "Not Support !!!!", Toast.LENGTH_LONG).show();
                     } else {
@@ -195,7 +230,6 @@ public class MainActivity extends Activity {
                     }
                 } else if (level_status == STOCK_INFO) {
                     if (index >= FIRST_ITEM) {
-                        link = Stock_info.Get_Stock_link_info();
                         open_url_web(link[index - FIRST_ITEM]);
                         //Toast.makeText(MainActivity.this, "Not Support !!!!", Toast.LENGTH_LONG).show();
                     } else {
@@ -285,41 +319,102 @@ public class MainActivity extends Activity {
         super.onKeyDown(keyCode,event);
         return true;
     }
+    /*   function : set_search_info
+     *   describe : Set current search link information
+     *   input    : List<PyObject>
+     *   return   : void
+     */
 
-
-
+    public void set_search_info(List<PyObject> search_result)
+    {
+        switch (level_status)
+        {
+            case FINANCE_INFO:
+                finance_info.Set_Finance_search_function(search_result);
+                break;
+            case INTERNATION_INFO:
+                Internationality_info.Set_Internationality_search_function(search_result);
+                break;
+            case POLITICAL_INFO:
+                Politics_info.Set_Politics_search_function(search_result);
+                break;
+            case SOCIETY_INFO:
+                Society_info.Set_Society_search_function(search_result);
+                break;
+            case TECH_INFO:
+                Technology_info.Set_Technology_search_function(search_result);
+                break;
+            case STOCK_INFO:
+                Stock_info.Set_Stock_search_function(search_result);
+                break;
+            default:
+                break;
+        }
+        return;
+    }
+    /*   function : getLink
+     *   describe : Get current web link information
+     *   input    : void
+     *   return   : string[]
+     */
+    public String[] getLink()
+    {
+        switch (level_status)
+        {
+            case FINANCE_INFO:
+                link = finance_info.Get_Finance_link_info();
+                break;
+            case INTERNATION_INFO:
+                link = Internationality_info.Get_internationality_link_info();
+                break;
+            case POLITICAL_INFO:
+                link = Politics_info.Get_Politics_link_info();
+                break;
+            case SOCIETY_INFO:
+                link = Society_info.Get_Society_link_info();
+                break;
+            case TECH_INFO:
+                link = Technology_info.Get_Technology_link_info();
+                break;
+            case STOCK_INFO:
+                link = Stock_info.Get_Stock_link_info();
+                break;
+            default:
+                break;
+        }
+        return link;
+    }
     public void dataChanged(int level_status) {
         int position = listView.getSelectedItemPosition();
-        Log.d(TAG, " item position : " + position + " level_status : " + level_status);
-
+        Log.d(TAG, "search List :" + search_result);
         list.clear();
         if (level_status == MAIN_INFO) {
             header.setText("主頁");
             factory_list();
         } else if (level_status == FINANCE_INFO) {
             header.setText("財經");
-            finance_info.Set_Finance_function();
-            finance_info.finance_list();
+            finance_info.Set_Finance_function(search_result);
+            finance_info.finance_list(search_result);
         } else if (level_status == INTERNATION_INFO) {
             header.setText("國際");
-            Internationality_info.Set_Internationality_function();
-            Internationality_info.internationality_list();
+            Internationality_info.Set_Internationality_function(search_result);
+            Internationality_info.internationality_list(search_result);
         } else if (level_status == POLITICAL_INFO) {
             header.setText("政治");
-            Politics_info.Set_Politics_function();
-            Politics_info.politics_list();
+            Politics_info.Set_Politics_function(search_result);
+            Politics_info.politics_list(search_result);
         } else if (level_status == SOCIETY_INFO) {
             header.setText("社會");
-            Society_info.Set_Society_function();
-            Society_info.society_list();
+            Society_info.Set_Society_function(search_result);
+            Society_info.society_list(search_result);
         } else if (level_status == TECH_INFO) {
             header.setText("科技");
-            Technology_info.Set_Technology_function();
-            Technology_info.technology_list();
+            Technology_info.Set_Technology_function(search_result);
+            Technology_info.technology_list(search_result);
         } else if (level_status == STOCK_INFO) {
             header.setText("股市");
-            Stock_info.Set_Stock_function();
-            Stock_info.stock_list();
+            Stock_info.Set_Stock_function(search_result);
+            Stock_info.stock_list(search_result);
         }
 
 
@@ -327,6 +422,8 @@ public class MainActivity extends Activity {
 
         //Set listView init position
         listView.setSelection(position);
+        // init search_result
+        search_result.clear();
     }
 
     /*---------------------------------------------*/

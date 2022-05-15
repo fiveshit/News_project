@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +27,25 @@ import com.chaquo.python.Python;
 // ---------------------------------------//
 public class Finance_list {
 
-    public String TAG = "Finance_UI";
+    private String TAG = "Finance_UI";
     private final String url = "https://udn.com/news/breaknews/1/6#breaknews";
     private final int MAX_FINANCE_LIST = 2;
     List<ItemBean> Finance_list = new ArrayList<>();
     Context context;
-    MainActivity mainActivity = new MainActivity();
+    EditText search_text = null;
     private static String[] result;
     private static String[] link;
     private int size = 0;
+    List<PyObject> search_result = new ArrayList<PyObject>();
     function_interface[] finance_function;// = new function_interface[MAX_FINANCE_LIST];
-    public Finance_list(List<ItemBean> list ,Context context)
+    public Finance_list(List<ItemBean> list , EditText text, Context context)
     {
         Finance_list = list;
         this.context = context;
+        this.search_text = text;
         finance_function = new function_interface []{
-            new function_interface (){ public boolean function(int key_code){return Set_Finance_search_function();} },
-            new function_interface (){ public boolean function(int key_code){return Set_Finance_function();}},
+            //new function_interface (){ public boolean function(int key_code){return Set_Finance_search_function();} },
+            new function_interface (){ public boolean function(int key_code){return Set_Finance_function(search_result);}},
         };
 
     }
@@ -50,22 +53,28 @@ public class Finance_list {
     /*-----------------------------------------*/
     /*------function in the Finance list ------*/
     /*-----------------------------------------*/
-    public void finance_list()
+    public void finance_list( List<PyObject> item)
     {
-        Finance_list.add(new ItemBean(Get_Finance_Ver()));
         Finance_list.add(new ItemBean(Get_Finance_Test()));
         /*---------------------------*/
         /*------dynamic update ------*/
         /*---------------------------*/
-        for(int i =0;i<size;i++) {
-            Finance_list.add(new ItemBean(result[i]));
-        }
 
+        if(!item.isEmpty())
+        {
+            for(int i = 0;i < item.size() ; i++)
+            {
+                Log.d(TAG,"arr :"+item.get(i).toInt());
+                Finance_list.add(new ItemBean(result[item.get(i).toInt()]));
+            }
+        }else
+        {
+            for (int i = 0; i < size; i++) {
+                Finance_list.add(new ItemBean(result[i]));
+            }
+        }
     }
-    public String Get_Finance_Ver(){
-        String Finance_Ver = "Search";
-        return Finance_Ver;
-    }
+
     public String Get_Finance_Test(){
         String Finance_Test = "Refresh";
         return Finance_Test;
@@ -73,31 +82,29 @@ public class Finance_list {
     /*---------------------------------------------*/
     /*-------get function in the Finance list -----*/
     /*---------------------------------------------*/
-    public String[] Get_Finance_link_info()
+    public static String[] Get_Finance_link_info()
     {
         return link;
     }
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Finance_search_function()
+    public boolean Set_Finance_search_function(List<PyObject> search_link)
     {
 
-        initPython();
-        Python py = Python.getInstance();
-        PyObject obj1 = py.getModule("news_capture").callAttr("test");//new Kwarg("wav_path", path),new Kwarg("pic_path", pic_path)
-        Integer result = obj1.toJava(Integer.class);//.toJava(Integer.class);
-        Log.d(TAG,"res :" + result);
+        for(int i = 0;i < search_link.size() ; i++)
+        {
+            //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
+            String tmp  = link[search_link.get(i).toInt()];
+            link[i] = tmp;
+            //Log.d(TAG,"link  :"+link[i]);
+
+        }
+        return true;
         //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
 
-        return true;
     }
-    void initPython() {
-        if (!Python.isStarted()) {
-            Python.start(new AndroidPlatform(this.context));
-        }
-    }
-    public boolean Set_Finance_function()
+    public boolean Set_Finance_function(List<PyObject> item)
     {
         Capture_news_info task1 = new Capture_news_info(url);
         Thread t1 = new Thread(task1);//.start()
@@ -108,15 +115,11 @@ public class Finance_list {
             System.out.println(e);
         }
         result = task1.getCallback();
-        link = task1.getCallback_link();
+        if(item.isEmpty()) {
+            link = task1.getCallback_link();
+        }
         size = task1.getCallback_size();
         return true;
     }
-    public boolean Set_Link_function(int index)
-    {
-        Uri uri = Uri.parse(link[index]);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        mainActivity.startActivity(intent);
-        return true;
-    }
+
 }

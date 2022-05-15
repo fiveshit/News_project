@@ -21,4 +21,13 @@
         android:layout_below="@+id/id_tvTitle"
         android:layout_marginTop="0dp"></ListView>
 
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:layout_alignParentBottom="true"
+        android:hint="search"
+        android:inputType="text"
+        android:textSize="15dp" />
+
 </RelativeLayout>

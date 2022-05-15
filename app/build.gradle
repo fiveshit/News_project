@@ -26,14 +26,10 @@ android {
         python{
             buildPython "C:\\Users\\d1004\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
             pip{
-                install "opencv-python"
-                install "numpy"
-                install "wave"
-                install "scipy"
-                install "matplotlib"
-                install "selenium"
                 install "twstock"
                 install "lxml"
+                install "requests"
+                install "bs4"
             }
 
         }

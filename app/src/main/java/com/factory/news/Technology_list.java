@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +17,12 @@ import java.util.List;
 // Return : -
 // ---------------------------------------//
 public class Technology_list {
-    public String TAG = "Technology_UI";
+    private String TAG = "Technology_UI";
     private final String url = "https://udn.com/news/breaknews/1/13#breaknews";
     private final int MAX = 2;
     List<ItemBean> Technology_list = new ArrayList<>();
     Context context;
+    List<PyObject> search_result = new ArrayList<PyObject>();
     function_interface[] Technology_function = new function_interface[MAX];
     private static String[] result;
     private static String[] link;
@@ -29,28 +32,32 @@ public class Technology_list {
         Technology_list = list;
         this.context = context;
         Technology_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Technology_search_function();} },
-                new function_interface (){ public boolean function(int key_code){return Set_Technology_function();}},
+               // new function_interface (){ public boolean function(int key_code){return Set_Technology_search_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Technology_function(search_result);}},
         };
 
     }
     /*-----------------------------------------*/
     /*------function in the Technology list ------*/
     /*-----------------------------------------*/
-    public void technology_list()
+    public void technology_list(List<PyObject> item)
     {
-        Technology_list.add(new ItemBean(Get_Technology_Ver()));
         Technology_list.add(new ItemBean(Get_Technology_Test()));
         /*---------------------------*/
         /*------dynamic update ------*/
         /*---------------------------*/
-        for(int i =0;i<size;i++) {
-            Technology_list.add(new ItemBean(result[i]));
+        if(!item.isEmpty())
+        {
+            for(int i = 0;i < item.size() ; i++)
+            {
+                Log.d(TAG,"arr :"+item.get(i).toInt());
+                Technology_list.add(new ItemBean(result[item.get(i).toInt()]));
+            }
+        }else {
+            for (int i = 0; i < size; i++) {
+                Technology_list.add(new ItemBean(result[i]));
+            }
         }
-    }
-    public String Get_Technology_Ver(){
-        String Technology_Ver = "Search";
-        return Technology_Ver;
     }
     public String Get_Technology_Test(){
         String Technology_Ver_Test = "Refresh";
@@ -66,12 +73,20 @@ public class Technology_list {
     /*-----------------------------------------*/
     /*---Set function in the Technology list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Technology_search_function()
+    public boolean Set_Technology_search_function(List<PyObject> search_link)
     {
-        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        for(int i = 0;i < search_link.size() ; i++)
+        {
+            //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
+            String tmp  = link[search_link.get(i).toInt()];
+            link[i] = tmp;
+            //Log.d(TAG,"link  :"+link[i]);
+
+        }
+        //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
         return true;
     }
-    public boolean Set_Technology_function()
+    public boolean Set_Technology_function(List<PyObject> item)
     {
         Capture_news_info task5 = new Capture_news_info(url);
         Thread t5 = new Thread(task5);//.start()
@@ -83,7 +98,9 @@ public class Technology_list {
         }
         result = task5.getCallback();
         size = task5.getCallback_size();
-        link = task5.getCallback_link();
+        if(item.isEmpty()) {
+            link = task5.getCallback_link();
+        }
         return true;
     }
 

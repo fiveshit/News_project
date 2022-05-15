@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +17,12 @@ import java.util.List;
 // Return : -
 // ---------------------------------------//
 public class Society_list {
-    public String TAG = "Society_UI";
+    private String TAG = "Society_UI";
     private final String url = "https://udn.com/news/breaknews/1/2#breaknews";
     private final int MAX_AQ_LIST = 2;
     List<ItemBean> Society_list = new ArrayList<>();
     Context context;
+    List<PyObject> search_result = new ArrayList<PyObject>();
     function_interface[] Society_function = new function_interface[MAX_AQ_LIST];
     private static String[] result;
     private static String[] link;
@@ -29,28 +32,32 @@ public class Society_list {
         Society_list = list;
         this.context = context;
         Society_function = new function_interface []{
-                new function_interface (){ public boolean function(int key_code){return Set_Society_search_function();} },
-                new function_interface (){ public boolean function(int key_code){return Set_Society_function();}},
+               // new function_interface (){ public boolean function(int key_code){return Set_Society_search_function();} },
+                new function_interface (){ public boolean function(int key_code){return Set_Society_function(search_result);}},
         };
 
     }
     /*-----------------------------------------*/
     /*------function in the Society list ------*/
     /*-----------------------------------------*/
-    public void society_list()
+    public void society_list(List<PyObject> item)
     {
-        Society_list.add(new ItemBean(Get_Society_Ver()));
         Society_list.add(new ItemBean(Get_Society_Test()));
         /*---------------------------*/
         /*------dynamic update ------*/
         /*---------------------------*/
-        for(int i =0;i<size;i++) {
-            Society_list.add(new ItemBean(result[i]));
+        if(!item.isEmpty())
+        {
+            for(int i = 0;i < item.size() ; i++)
+            {
+                Log.d(TAG,"arr :"+item.get(i).toInt());
+                Society_list.add(new ItemBean(result[item.get(i).toInt()]));
+            }
+        }else {
+            for (int i = 0; i < size; i++) {
+                Society_list.add(new ItemBean(result[i]));
+            }
         }
-    }
-    public String Get_Society_Ver(){
-        String Society_Ver = "Search";
-        return Society_Ver;
     }
     public String Get_Society_Test(){
         String Society_Ver_Test = "Refresh";
@@ -66,12 +73,20 @@ public class Society_list {
     /*-----------------------------------------*/
     /*---Set function in the Society list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Society_search_function()
+    public boolean Set_Society_search_function(List<PyObject> search_link)
     {
-        Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
+        for(int i = 0;i < search_link.size() ; i++)
+        {
+            //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
+            String tmp  = link[search_link.get(i).toInt()];
+            link[i] = tmp;
+            //Log.d(TAG,"link  :"+link[i]);
+
+        }
+        //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
         return true;
     }
-    public boolean Set_Society_function()
+    public boolean Set_Society_function(List<PyObject> item)
     {
         Capture_news_info task4 = new Capture_news_info(url);
         Thread t4 = new Thread(task4);//.start()
@@ -83,7 +98,9 @@ public class Society_list {
         }
         result = task4.getCallback();
         size = task4.getCallback_size();
-        link = task4.getCallback_link();
+        if(item.isEmpty()) {
+            link = task4.getCallback_link();
+        }
         return true;
     }
 
