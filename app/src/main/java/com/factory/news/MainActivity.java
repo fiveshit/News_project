@@ -155,12 +155,14 @@ public class MainActivity extends Activity {
                     search_result = search_proc.getSearch_result();
                     set_search_info(search_result);
                     dataChanged(level_status);
-                    if(search_result.size() == 0) {
+
+                    if(search_result.isEmpty()) {
                         header.setText("搜尋不到");
                     } else {
                         header.setText("搜尋 :" + search_text.getText());
                     }
-
+                    // init search_result
+                    search_result.clear();
                 }
                 return false;
             }
@@ -422,8 +424,7 @@ public class MainActivity extends Activity {
 
         //Set listView init position
         listView.setSelection(position);
-        // init search_result
-        search_result.clear();
+
     }
 
     /*---------------------------------------------*/
