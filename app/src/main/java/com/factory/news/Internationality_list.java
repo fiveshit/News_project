@@ -25,7 +25,7 @@ public class Internationality_list {
     private int size = 0;
     List<ItemBean> Internationality_list = new ArrayList<>();
     Context context;
-    List<PyObject> search_result = new ArrayList<PyObject>();
+    ArrayList<Integer> search_result = new ArrayList<Integer>();
     function_interface[] Internationality_function = new function_interface[MAX_AQ_LIST];
 
     public Internationality_list(List<ItemBean> list, Context context)
@@ -41,7 +41,7 @@ public class Internationality_list {
     /*--------------------------------------------------*/
     /*------function in the internationality list ------*/
     /*--------------------------------------------------*/
-    public void internationality_list( List<PyObject> item)
+    public void internationality_list( ArrayList<Integer> item)
     {
         Internationality_list.add(new ItemBean(Get_Internationality_Test()));
         /*---------------------------*/
@@ -51,8 +51,8 @@ public class Internationality_list {
         {
             for(int i = 0;i < item.size() ; i++)
             {
-                Log.d(TAG,"arr :"+item.get(i).toInt());
-                Internationality_list.add(new ItemBean(result[item.get(i).toInt()]));
+                Log.d(TAG,"arr :"+item.get(i));
+                Internationality_list.add(new ItemBean(result[item.get(i)]));
             }
         }else {
             for (int i = 0; i < size; i++) {
@@ -76,12 +76,12 @@ public class Internationality_list {
     /*-----------------------------------------*/
     /*---Set function in the internationality list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Internationality_search_function(List<PyObject> search_link)
+    public boolean Set_Internationality_search_function(ArrayList<Integer> search_link)
     {
         for(int i = 0;i < search_link.size() ; i++)
         {
             //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
-            String tmp  = link[search_link.get(i).toInt()];
+            String tmp  = link[search_link.get(i)];
             link[i] = tmp;
             //Log.d(TAG,"link  :"+link[i]);
 
@@ -89,7 +89,7 @@ public class Internationality_list {
         //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
         return true;
     }
-    public boolean Set_Internationality_function(List<PyObject> item)
+    public boolean Set_Internationality_function(ArrayList<Integer> item)
     {
         Capture_news_info task2 = new Capture_news_info(url);
         Thread t2 = new Thread(task2);//.start()

@@ -2,6 +2,8 @@ package com.factory.news;
 
 //import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -22,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chaquo.python.PyObject;
 
@@ -31,7 +35,7 @@ public class MainActivity extends Activity {
     private String TAG = "INX_Factory_UI";
     private ListView listView = null;
     private TextView header = null;
-    private EditText search_text = null;
+    private Button search_text = null;
     // Item info class
     private Finance_list finance_info = null;
     private Internationality_list Internationality_info = null;
@@ -39,16 +43,17 @@ public class MainActivity extends Activity {
     private Society_list Society_info = null;
     private Technology_list Technology_info = null;
     private Stock_list Stock_info = null;
-    private Search_news_info search_proc = null;
-
 
     private MyAdapter adapter = null;
     List<ItemBean> list = new ArrayList<>();
     static Stack<Integer> level = new Stack<>();
     // search result
-    List<PyObject> search_result = new ArrayList<PyObject>();
+    //List<PyObject> search_result = new ArrayList<PyObject>();
+    ArrayList<Integer> search_result = new ArrayList<>();
     // web link
     private static String[] link;
+    // bundle sent result code
+    private static final int SENT_RESULT = 1;
     // level status
     private static final int MAIN_INFO = 1;
     private static final int FINANCE_INFO = 2;
@@ -67,6 +72,35 @@ public class MainActivity extends Activity {
     public static Integer level_status = MAIN_INFO;
     function_interface[] call_function = new function_interface[MAX_ITEM];
 
+
+    /*   function : onActivityResult
+     *   describe : use intent+bundle to search_view activity
+     *              return result from search_view activity
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch(resultCode){
+            case SENT_RESULT:
+                ArrayList<Integer> res = new ArrayList<>();
+                res = data.getExtras().getIntegerArrayList("search_result");
+                String text = data.getExtras().getString("edit_text");
+                set_search_list(res);
+                set_search_info(res);
+                dataChanged(level_status);
+
+                if(res.isEmpty()) {
+                    header.setText("搜尋不到");
+                } else {
+                    header.setText("搜尋 :" + text);
+                }
+                // clear array
+                res.clear();
+                break;
+
+        }
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +108,8 @@ public class MainActivity extends Activity {
         Log.d("TAG ", "onCreate");
         //  inx factory UI list
         factory_list();
-        level.push(level_status);
 
+        level.push(level_status);
         // function array
         call_function = new function_interface[]{
                 new function_interface() {
@@ -112,61 +146,37 @@ public class MainActivity extends Activity {
 
         };
         // find View id
-        search_text = (EditText)findViewById(R.id.search);
+        search_text = (Button) findViewById(R.id.id_search_button);
         listView = (ListView)findViewById(R.id.factory_ui_list);
         header = (TextView)findViewById(R.id.id_tvTitle);
         // other list
         adapter = new MyAdapter(list, this);
         // item list
-        finance_info = new Finance_list(list, search_text,this);
+        finance_info = new Finance_list(list,this);
         Internationality_info = new Internationality_list(list, this);
         Politics_info = new Politics_list(list, this);
         Society_info = new Society_list(list, this);
         Technology_info = new Technology_list(list, this);
         Stock_info = new Stock_list(list, this);
 
-
-        header.setText("主頁");
-        search_text.addTextChangedListener(new TextWatcher() {
+        search_text.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                header.setText("搜尋中");
-            }
-        });
-        search_text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_DONE)
+            public void onClick(View v) {
+                if(level_status == MAIN_INFO)
                 {
-                    Log.d(TAG,"key enter");
-                    link = getLink();
-                    search_proc = new Search_news_info(link,search_text,MainActivity.this);
-                    search_proc.run();
-                    search_result = search_proc.getSearch_result();
-                    set_search_info(search_result);
-                    dataChanged(level_status);
+                    Toast.makeText(MainActivity.this,"請選擇子項目進入",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent = new Intent(MainActivity.this, Search_view.class);
+                    intent.putExtra("link", getLink());
+                    startActivityForResult(intent, SENT_RESULT);
 
-                    if(search_result.isEmpty()) {
-                        header.setText("搜尋不到");
-                    } else {
-                        header.setText("搜尋 :" + search_text.getText());
-                    }
-                    // init search_result
-                    search_result.clear();
+                    header.setText("搜尋中");
                 }
-                return false;
+
             }
         });
+        header.setText("主頁");
+
 
         listView.setAdapter(adapter); //將設定好的 adapter 丟進 ListView
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -264,8 +274,34 @@ public class MainActivity extends Activity {
         }
     };
     @Override
+    protected void onResume(){
+        super.onResume();
+        switch (level_status){
+            case MAIN_INFO:
+                header.setText("主頁");
+                break;
+            case FINANCE_INFO:
+                header.setText("財經");
+                break;
+            case INTERNATION_INFO:
+                header.setText("國際");
+                break;
+            case POLITICAL_INFO:
+                header.setText("政治");
+                break;
+            case SOCIETY_INFO:
+                header.setText("社會");
+                break;
+            case TECH_INFO:
+                header.setText("科技");
+                break;
+            case STOCK_INFO:
+                header.setText("股市");
+                break;
+        }
+    }
+    @Override
     public void onBackPressed() {
-
     }
 
     public void factory_list() {
@@ -327,8 +363,9 @@ public class MainActivity extends Activity {
      *   return   : void
      */
 
-    public void set_search_info(List<PyObject> search_result)
+    public void set_search_info(ArrayList<Integer> search_result)
     {
+
         switch (level_status)
         {
             case FINANCE_INFO:
@@ -340,7 +377,7 @@ public class MainActivity extends Activity {
             case POLITICAL_INFO:
                 Politics_info.Set_Politics_search_function(search_result);
                 break;
-            case SOCIETY_INFO:
+            case SOCIETY_INFO:1
                 Society_info.Set_Society_search_function(search_result);
                 break;
             case TECH_INFO:
@@ -351,6 +388,8 @@ public class MainActivity extends Activity {
                 break;
             default:
                 break;
+
+
         }
         return;
     }
@@ -386,9 +425,13 @@ public class MainActivity extends Activity {
         }
         return link;
     }
-    public void dataChanged(int level_status) {
+    public void set_search_list(ArrayList<Integer> int_list)
+    {
+        search_result =  int_list;
+    }
+
+    public void dataChanged(Integer level_status) {
         int position = listView.getSelectedItemPosition();
-        Log.d(TAG, "search List :" + search_result);
         list.clear();
         if (level_status == MAIN_INFO) {
             header.setText("主頁");
@@ -418,6 +461,8 @@ public class MainActivity extends Activity {
             Stock_info.Set_Stock_function(search_result);
             Stock_info.stock_list(search_result);
         }
+
+
 
 
         listView.setAdapter(adapter);

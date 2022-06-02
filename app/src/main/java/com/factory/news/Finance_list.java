@@ -32,17 +32,15 @@ public class Finance_list {
     private final int MAX_FINANCE_LIST = 2;
     List<ItemBean> Finance_list = new ArrayList<>();
     Context context;
-    EditText search_text = null;
     private static String[] result;
     private static String[] link;
     private int size = 0;
-    List<PyObject> search_result = new ArrayList<PyObject>();
+    ArrayList<Integer> search_result = new ArrayList<>();
     function_interface[] finance_function;// = new function_interface[MAX_FINANCE_LIST];
-    public Finance_list(List<ItemBean> list , EditText text, Context context)
+    public Finance_list(List<ItemBean> list , Context context)
     {
         Finance_list = list;
         this.context = context;
-        this.search_text = text;
         finance_function = new function_interface []{
             //new function_interface (){ public boolean function(int key_code){return Set_Finance_search_function();} },
             new function_interface (){ public boolean function(int key_code){return Set_Finance_function(search_result);}},
@@ -53,7 +51,7 @@ public class Finance_list {
     /*-----------------------------------------*/
     /*------function in the Finance list ------*/
     /*-----------------------------------------*/
-    public void finance_list( List<PyObject> item)
+    public void finance_list( ArrayList<Integer> item)
     {
         Finance_list.add(new ItemBean(Get_Finance_Test()));
         /*---------------------------*/
@@ -64,8 +62,8 @@ public class Finance_list {
         {
             for(int i = 0;i < item.size() ; i++)
             {
-                Log.d(TAG,"arr :"+item.get(i).toInt());
-                Finance_list.add(new ItemBean(result[item.get(i).toInt()]));
+                Log.d(TAG,"arr :"+item.get(i));
+                Finance_list.add(new ItemBean(result[item.get(i)]));
             }
         }else
         {
@@ -89,13 +87,13 @@ public class Finance_list {
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Finance_search_function(List<PyObject> search_link)
+    public boolean Set_Finance_search_function(ArrayList<Integer> search_link)
     {
 
         for(int i = 0;i < search_link.size() ; i++)
         {
             //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
-            String tmp  = link[search_link.get(i).toInt()];
+            String tmp  = link[search_link.get(i)];
             link[i] = tmp;
             //Log.d(TAG,"link  :"+link[i]);
 
@@ -104,7 +102,7 @@ public class Finance_list {
         //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
 
     }
-    public boolean Set_Finance_function(List<PyObject> item)
+    public boolean Set_Finance_function(ArrayList<Integer> item)
     {
         Capture_news_info task1 = new Capture_news_info(url);
         Thread t1 = new Thread(task1);//.start()

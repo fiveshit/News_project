@@ -22,7 +22,7 @@ public class Society_list {
     private final int MAX_AQ_LIST = 2;
     List<ItemBean> Society_list = new ArrayList<>();
     Context context;
-    List<PyObject> search_result = new ArrayList<PyObject>();
+    ArrayList<Integer> search_result = new ArrayList<Integer>();
     function_interface[] Society_function = new function_interface[MAX_AQ_LIST];
     private static String[] result;
     private static String[] link;
@@ -40,7 +40,7 @@ public class Society_list {
     /*-----------------------------------------*/
     /*------function in the Society list ------*/
     /*-----------------------------------------*/
-    public void society_list(List<PyObject> item)
+    public void society_list(ArrayList<Integer> item)
     {
         Society_list.add(new ItemBean(Get_Society_Test()));
         /*---------------------------*/
@@ -50,8 +50,8 @@ public class Society_list {
         {
             for(int i = 0;i < item.size() ; i++)
             {
-                Log.d(TAG,"arr :"+item.get(i).toInt());
-                Society_list.add(new ItemBean(result[item.get(i).toInt()]));
+                Log.d(TAG,"arr :"+item.get(i));
+                Society_list.add(new ItemBean(result[item.get(i)]));
             }
         }else {
             for (int i = 0; i < size; i++) {
@@ -73,12 +73,12 @@ public class Society_list {
     /*-----------------------------------------*/
     /*---Set function in the Society list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Society_search_function(List<PyObject> search_link)
+    public boolean Set_Society_search_function(ArrayList<Integer> search_link)
     {
         for(int i = 0;i < search_link.size() ; i++)
         {
             //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
-            String tmp  = link[search_link.get(i).toInt()];
+            String tmp  = link[search_link.get(i)];
             link[i] = tmp;
             //Log.d(TAG,"link  :"+link[i]);
 
@@ -86,7 +86,7 @@ public class Society_list {
         //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
         return true;
     }
-    public boolean Set_Society_function(List<PyObject> item)
+    public boolean Set_Society_function(ArrayList<Integer> item)
     {
         Capture_news_info task4 = new Capture_news_info(url);
         Thread t4 = new Thread(task4);//.start()

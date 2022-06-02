@@ -15,7 +15,7 @@ public class Stock_list {
     private final int MAX_STOCK_LIST = 2;
     List<ItemBean> Stock_list = new ArrayList<>();
     Context context;
-    List<PyObject> search_result = new ArrayList<PyObject>();
+    ArrayList<Integer> search_result = new ArrayList<Integer>();
     private static String[] result;
     private static String[] link;
     private int size = 0;
@@ -34,7 +34,7 @@ public class Stock_list {
     /*-----------------------------------------*/
     /*------function in the Finance list ------*/
     /*-----------------------------------------*/
-    public void stock_list(List<PyObject> item)
+    public void stock_list(ArrayList<Integer> item)
     {
         Stock_list.add(new ItemBean(Get_Stock_Test()));
         /*---------------------------*/
@@ -44,8 +44,8 @@ public class Stock_list {
         {
             for(int i = 0;i < item.size() ; i++)
             {
-                Log.d(TAG,"arr :"+item.get(i).toInt());
-                Stock_list.add(new ItemBean(result[item.get(i).toInt()]));
+                Log.d(TAG,"arr :"+item.get(i));
+                Stock_list.add(new ItemBean(result[item.get(i)]));
             }
         }else {
             for (int i = 0; i < size; i++) {
@@ -69,12 +69,12 @@ public class Stock_list {
     /*-----------------------------------------*/
     /*---Set function in the Finance list -----*/
     /*-----------------------------------------*/
-    public boolean Set_Stock_search_function(List<PyObject> search_link)
+    public boolean Set_Stock_search_function(ArrayList<Integer> search_link)
     {
         for(int i = 0;i < search_link.size() ; i++)
         {
             //Log.d(TAG,"search_link :"+search_link.get(i).toInt());
-            String tmp  = link[search_link.get(i).toInt()];
+            String tmp  = link[search_link.get(i)];
             link[i] = tmp;
             //Log.d(TAG,"link  :"+link[i]);
 
@@ -82,7 +82,7 @@ public class Stock_list {
         //Toast.makeText(this.context,"Not Support !!!!",Toast.LENGTH_LONG).show();
         return true;
     }
-    public boolean Set_Stock_function(List<PyObject> item)
+    public boolean Set_Stock_function(ArrayList<Integer> item)
     {
         Capture_news_info task6 = new Capture_news_info(url);
         //task6.Set_url(url);
